@@ -1,0 +1,625 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin — Koleksi Aya</title>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg: #0a0a0b; --surface: #141416; --surface2: #1c1c1f;
+            --border: #2a2a2e; --text: #e8e8ec; --text-muted: #8b8b96;
+            --accent: #c084fc; --accent-hover: #a855f7;
+            --success: #4ade80; --danger: #f87171;
+            --cosplay: #f472b6; --fanart: #60a5fa; --radius: 12px;
+        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Plus Jakarta Sans', system-ui, sans-serif; background: var(--bg); color: var(--text); min-height: 100vh; }
+
+        /* Header */
+        .admin-header {
+            background: var(--surface); border-bottom: 1px solid var(--border);
+            padding: 1rem 2rem; display: flex; align-items: center; justify-content: space-between;
+            position: sticky; top: 0; z-index: 100;
+        }
+        .admin-header h1 { font-size: 1.2rem; font-weight: 700; color: var(--accent); }
+        .admin-header a {
+            color: var(--text-muted); text-decoration: none; font-size: 0.85rem;
+            padding: 0.5rem 1rem; border: 1px solid var(--border); border-radius: 8px; transition: all 0.2s;
+        }
+        .admin-header a:hover { border-color: var(--accent); color: var(--accent); }
+
+        .container { max-width: 1400px; margin: 0 auto; padding: 2rem; }
+
+        /* Setup Section */
+        .setup-section {
+            background: var(--surface); border: 1px solid var(--border);
+            border-radius: var(--radius); padding: 2rem; margin-bottom: 2rem;
+        }
+        .setup-section h2 { font-size: 1.1rem; margin-bottom: 1rem; color: var(--accent); }
+        .setup-section p { color: var(--text-muted); font-size: 0.9rem; margin-bottom: 1rem; line-height: 1.6; }
+        .setup-section ol { color: var(--text-muted); font-size: 0.9rem; margin-left: 1.5rem; margin-bottom: 1rem; }
+        .setup-section li { margin-bottom: 0.5rem; }
+        .setup-section code { background: var(--surface2); padding: 0.15rem 0.4rem; border-radius: 4px; font-size: 0.85rem; color: var(--accent); }
+
+        /* Upload Section */
+        .upload-section {
+            background: var(--surface); border: 1px solid var(--border);
+            border-radius: var(--radius); padding: 2rem; margin-bottom: 2rem;
+        }
+        .upload-section h2 { font-size: 1.1rem; margin-bottom: 1.5rem; color: var(--accent); }
+        .upload-form { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+        .form-group { display: flex; flex-direction: column; gap: 0.4rem; }
+        .form-group.full { grid-column: 1 / -1; }
+        .form-group label { font-size: 0.8rem; font-weight: 600; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.05em; }
+        .form-group input, .form-group select, .form-group textarea {
+            background: var(--surface2); border: 1px solid var(--border); border-radius: 8px;
+            padding: 0.75rem 1rem; color: var(--text); font-size: 0.9rem; font-family: inherit; transition: border-color 0.2s;
+        }
+        .form-group input:focus, .form-group select:focus { outline: none; border-color: var(--accent); }
+
+        .file-drop {
+            border: 2px dashed var(--border); border-radius: var(--radius); padding: 2rem;
+            text-align: center; cursor: pointer; transition: all 0.3s; background: var(--surface2);
+        }
+        .file-drop:hover, .file-drop.dragover { border-color: var(--accent); background: rgba(192,132,252,0.05); }
+        .file-drop input { display: none; }
+        .file-drop-label { display: flex; flex-direction: column; align-items: center; gap: 0.5rem; color: var(--text-muted); }
+        .file-drop-label .icon { font-size: 2rem; }
+        .file-preview { display: flex; flex-wrap: wrap; gap: 0.5rem; margin-top: 0.5rem; }
+        .file-preview-item { width: 60px; height: 60px; border-radius: 6px; overflow: hidden; border: 1px solid var(--border); }
+        .file-preview-item img { width: 100%; height: 100%; object-fit: cover; }
+
+        .btn {
+            padding: 0.75rem 1.5rem; border: none; border-radius: 8px; font-family: inherit;
+            font-size: 0.9rem; font-weight: 600; cursor: pointer; transition: all 0.2s;
+            display: inline-flex; align-items: center; justify-content: center; gap: 0.5rem;
+        }
+        .btn-primary { background: var(--accent); color: #000; }
+        .btn-primary:hover { background: var(--accent-hover); }
+        .btn-primary:disabled { opacity: 0.5; cursor: not-allowed; }
+        .btn-danger { background: transparent; color: var(--danger); border: 1px solid var(--danger); }
+        .btn-danger:hover { background: var(--danger); color: #000; }
+        .btn-sm { padding: 0.4rem 0.8rem; font-size: 0.8rem; }
+
+        /* Status Messages */
+        .status { padding: 0.75rem 1rem; border-radius: 8px; margin-bottom: 1rem; font-size: 0.9rem; display: none; }
+        .status.success { display: block; background: rgba(74,222,128,0.1); color: var(--success); border: 1px solid rgba(74,222,128,0.2); }
+        .status.error { display: block; background: rgba(248,113,113,0.1); color: var(--danger); border: 1px solid rgba(248,113,113,0.2); }
+        .status.loading { display: block; background: rgba(192,132,252,0.1); color: var(--accent); border: 1px solid rgba(192,132,252,0.2); }
+
+        /* Filter */
+        .filter-bar { display: flex; align-items: center; gap: 1rem; margin-bottom: 1.5rem; flex-wrap: wrap; }
+        .filter-bar a {
+            color: var(--text-muted); text-decoration: none; padding: 0.5rem 1rem;
+            border-radius: 8px; font-size: 0.85rem; font-weight: 500;
+            border: 1px solid var(--border); transition: all 0.2s; cursor: pointer;
+        }
+        .filter-bar a.active { background: var(--accent); color: #000; border-color: var(--accent); }
+        .filter-bar a:hover:not(.active) { border-color: var(--accent); }
+
+        /* Gallery Grid */
+        .admin-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 1rem; }
+        .admin-card {
+            background: var(--surface); border: 1px solid var(--border);
+            border-radius: var(--radius); overflow: hidden; transition: transform 0.2s; position: relative;
+        }
+        .admin-card:hover { transform: translateY(-2px); }
+        .admin-card-img { width: 100%; height: 200px; object-fit: cover; display: block; }
+        .admin-card-info { padding: 0.75rem; font-size: 0.8rem; color: var(--text-muted); }
+        .admin-card-info .category { color: var(--accent); font-weight: 600; text-transform: uppercase; font-size: 0.7rem; }
+        .admin-card-info .source { word-break: break-all; }
+        .admin-card-actions { padding: 0 0.75rem 0.75rem; display: flex; gap: 0.5rem; }
+        .admin-card-actions .btn { flex: 1; }
+
+        /* Progress */
+        .progress-bar { width: 100%; height: 4px; background: var(--border); border-radius: 2px; margin-top: 0.5rem; overflow: hidden; display: none; }
+        .progress-bar.active { display: block; }
+        .progress-fill { height: 100%; background: var(--accent); border-radius: 2px; transition: width 0.3s; width: 0%; }
+
+        /* Modal */
+        .modal-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.8); z-index: 1000; align-items: center; justify-content: center; }
+        .modal-overlay.active { display: flex; }
+        .modal { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 2rem; width: 90%; max-width: 500px; }
+        .modal h3 { margin-bottom: 1rem; color: var(--accent); }
+        .modal .form-group { margin-bottom: 1rem; }
+        .modal-actions { display: flex; gap: 0.5rem; justify-content: flex-end; margin-top: 1.5rem; }
+
+        @media (max-width: 768px) {
+            .upload-form { grid-template-columns: 1fr; }
+            .admin-grid { grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); }
+            .container { padding: 1rem; }
+        }
+    </style>
+</head>
+<body>
+    <header class="admin-header">
+        <h1>✧ Admin Panel</h1>
+        <div style="display:flex;gap:1rem;align-items:center;">
+            <a href="index.html">← Lihat Galeri</a>
+        </div>
+    </header>
+
+    <div class="container">
+        <!-- Setup Section (shown when not configured) -->
+        <div class="setup-section" id="setupSection">
+            <h2>⚙️ Setup GitHub Connection</h2>
+            <p>Untuk menggunakan admin panel ini, kamu perlu:</p>
+            <ol>
+                <li>Buat <strong>GitHub Personal Access Token</strong> (PAT) dengan scope <code>repo</code>
+                    <br>→ <a href="https://github.com/settings/tokens/new?scopes=repo&description=KoleksiAya-Admin" target="_blank" style="color:var(--accent)">Buat Token di sini</a></li>
+                <li>Masukkan token dan info repo di bawah</li>
+                <li>Token disimpan di localStorage browser kamu (tidak dikirim ke server lain)</li>
+            </ol>
+            
+            <div style="margin-top:1.5rem">
+                <div class="form-group" style="margin-bottom:1rem">
+                    <label>GitHub Token (PAT)</label>
+                    <input type="password" id="githubToken" placeholder="ghp_xxxxxxxxxxxx">
+                </div>
+                <div class="form-group" style="margin-bottom:1rem">
+                    <label>Repository (owner/repo)</label>
+                    <input type="text" id="repoName" placeholder="Ayakariz/KoleksiPribadi">
+                </div>
+                <button class="btn btn-primary" onclick="saveConfig()">💾 Simpan & Hubungkan</button>
+            </div>
+        </div>
+
+        <!-- Main Admin (shown when configured) -->
+        <div id="mainAdmin" style="display:none">
+            <div id="statusMsg" class="status"></div>
+
+            <!-- Upload Section -->
+            <div class="upload-section">
+                <h2>📤 Upload Foto</h2>
+                <form id="uploadForm" onsubmit="handleUpload(event)">
+                    <div class="upload-form">
+                        <div class="form-group full">
+                            <label>Pilih Foto (bisa banyak sekaligus)</label>
+                            <div class="file-drop" id="fileDrop">
+                                <input type="file" id="fileInput" multiple accept="image/*">
+                                <div class="file-drop-label">
+                                    <span class="icon">📁</span>
+                                    <span>Klik atau drag & drop foto di sini</span>
+                                    <span style="font-size:0.75rem;color:var(--text-muted)">JPG, PNG, GIF, WEBP</span>
+                                </div>
+                            </div>
+                            <div class="file-preview" id="filePreview"></div>
+                            <div class="progress-bar" id="progressBar">
+                                <div class="progress-fill" id="progressFill"></div>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label>Kategori</label>
+                            <select id="uploadCategory" required>
+                                <option value="cosplay">♛ Cosplay</option>
+                                <option value="fanart">✎ Fanart</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label>Source URL (opsional)</label>
+                            <input type="url" id="uploadSource" placeholder="https://twitter.com/...">
+                        </div>
+                        <div class="form-group full">
+                            <label>Caption (opsional)</label>
+                            <input type="text" id="uploadCaption" placeholder="Deskripsi singkat...">
+                        </div>
+                        <div class="form-group full">
+                            <button type="submit" class="btn btn-primary" id="uploadBtn" style="width:100%">🚀 Upload Sekarang</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+
+            <!-- Filter -->
+            <div class="filter-bar">
+                <a onclick="filterGallery('all')" class="active" id="filter-all">Semua</a>
+                <a onclick="filterGallery('cosplay')" id="filter-cosplay">♛ Cosplay</a>
+                <a onclick="filterGallery('fanart')" id="filter-fanart">✎ Fanart</a>
+                <button class="btn btn-danger btn-sm" onclick="bulkDelete()" id="bulkDeleteBtn" style="display:none">
+                    🗑 Hapus Terpilih (<span id="selectedCount">0</span>)
+                </button>
+            </div>
+
+            <!-- Gallery -->
+            <div class="admin-grid" id="adminGrid"></div>
+            <div id="emptyAdmin" style="text-align:center;padding:4rem;color:var(--text-muted);display:none">
+                <div style="font-size:3rem;margin-bottom:1rem">✧</div>
+                <h3>Belum ada foto</h3>
+                <p>Upload foto pertama kamu di atas.</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Edit Modal -->
+    <div class="modal-overlay" id="editModal">
+        <div class="modal">
+            <h3>✏️ Edit Foto</h3>
+            <input type="hidden" id="editIndex">
+            <div class="form-group">
+                <label>Kategori</label>
+                <select id="editCategory">
+                    <option value="cosplay">♛ Cosplay</option>
+                    <option value="fanart">✎ Fanart</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label>Source URL</label>
+                <input type="url" id="editSource" placeholder="https://twitter.com/...">
+            </div>
+            <div class="form-group">
+                <label>Caption</label>
+                <input type="text" id="editCaption" placeholder="Deskripsi...">
+            </div>
+            <div class="modal-actions">
+                <button class="btn" style="background:var(--surface2);color:var(--text);border:1px solid var(--border)" onclick="closeModal()">Batal</button>
+                <button class="btn btn-primary" onclick="saveEdit()">Simpan</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // ── Config ──────────────────────────────
+        const STORAGE_KEY = 'koleksiaya_config';
+        let config = JSON.parse(localStorage.getItem(STORAGE_KEY) || '{}');
+        let galleryData = [];
+        let selectedIds = new Set();
+        let currentFilter = 'all';
+
+        // ── GitHub API ──────────────────────────
+        function getHeaders() {
+            return {
+                'Authorization': `token ${config.token}`,
+                'Accept': 'application/vnd.github.v3+json',
+                'Content-Type': 'application/json'
+            };
+        }
+
+        async function githubApi(path, method = 'GET', body = null) {
+            const url = `https://api.github.com/repos/${config.repo}${path}`;
+            const opts = { method, headers: getHeaders() };
+            if (body) opts.body = JSON.stringify(body);
+            const res = await fetch(url, opts);
+            if (!res.ok) {
+                const err = await res.json().catch(() => ({}));
+                throw new Error(err.message || `GitHub API error: ${res.status}`);
+            }
+            return res.json();
+        }
+
+        // ── Init ────────────────────────────────
+        function init() {
+            if (config.token && config.repo) {
+                document.getElementById('setupSection').style.display = 'none';
+                document.getElementById('mainAdmin').style.display = 'block';
+                loadGallery();
+            }
+        }
+
+        function saveConfig() {
+            const token = document.getElementById('githubToken').value.trim();
+            const repo = document.getElementById('repoName').value.trim();
+            if (!token || !repo) { showStatus('Isi semua field!', 'error'); return; }
+            config = { token, repo };
+            localStorage.setItem(STORAGE_KEY, JSON.stringify(config));
+            init();
+        }
+
+        // ── Load Gallery ────────────────────────
+        async function loadGallery() {
+            try {
+                showStatus('Memuat data...', 'loading');
+                const file = await githubApi('/contents/data/gallery.json');
+                galleryData = JSON.parse(atob(file.content));
+                renderAdminGrid();
+                hideStatus();
+            } catch (e) {
+                console.error(e);
+                showStatus('Gagal memuat data: ' + e.message, 'error');
+                galleryData = [];
+                renderAdminGrid();
+            }
+        }
+
+        // ── Save Gallery ────────────────────────
+        async function saveGallery(message) {
+            try {
+                let sha = null;
+                try {
+                    const file = await githubApi('/contents/data/gallery.json');
+                    sha = file.sha;
+                } catch (e) { /* file doesn't exist yet */ }
+
+                const body = {
+                    message: message || 'Update gallery',
+                    content: btoa(JSON.stringify(galleryData, null, 2)),
+                    branch: 'main'
+                };
+                if (sha) body.sha = sha;
+
+                await githubApi('/contents/data/gallery.json', 'PUT', body);
+                return true;
+            } catch (e) {
+                console.error(e);
+                showStatus('Gagal menyimpan: ' + e.message, 'error');
+                return false;
+            }
+        }
+
+        // ── Upload ──────────────────────────────
+        async function handleUpload(e) {
+            e.preventDefault();
+            const files = document.getElementById('fileInput').files;
+            const category = document.getElementById('uploadCategory').value;
+            const sourceUrl = document.getElementById('uploadSource').value.trim();
+            const caption = document.getElementById('uploadCaption').value.trim();
+
+            if (!files.length) { showStatus('Pilih file dulu!', 'error'); return; }
+
+            const btn = document.getElementById('uploadBtn');
+            const progressBar = document.getElementById('progressBar');
+            const progressFill = document.getElementById('progressFill');
+            btn.disabled = true;
+            btn.textContent = '⏳ Mengupload...';
+            progressBar.classList.add('active');
+
+            let uploaded = 0;
+            for (const file of files) {
+                try {
+                    const ext = file.name.split('.').pop().toLowerCase();
+                    const filename = `${Date.now()}-${Math.random().toString(36).substr(2, 6)}.${ext}`;
+                    const path = `images/${category}/${filename}`;
+
+                    // Convert to base64
+                    const base64 = await fileToBase64(file);
+
+                    // Upload to GitHub
+                    await githubApi(`/contents/${path}`, 'PUT', {
+                        message: `Add ${category} image: ${filename}`,
+                        content: base64,
+                        branch: 'main'
+                    });
+
+                    // Add to gallery data
+                    galleryData.push({
+                        filename,
+                        category,
+                        source_url: sourceUrl,
+                        caption,
+                        added_at: new Date().toISOString()
+                    });
+
+                    uploaded++;
+                    progressFill.style.width = `${(uploaded / files.length) * 100}%`;
+                } catch (err) {
+                    console.error(`Failed to upload ${file.name}:`, err);
+                }
+            }
+
+            // Save gallery.json
+            await saveGallery(`Add ${uploaded} images`);
+
+            btn.disabled = false;
+            btn.textContent = '🚀 Upload Sekarang';
+            progressBar.classList.remove('active');
+            progressFill.style.width = '0%';
+
+            // Reset form
+            document.getElementById('fileInput').value = '';
+            document.getElementById('filePreview').innerHTML = '';
+            document.getElementById('uploadSource').value = '';
+            document.getElementById('uploadCaption').value = '';
+
+            showStatus(`Berhasil upload ${uploaded} foto!`, 'success');
+            renderAdminGrid();
+        }
+
+        function fileToBase64(file) {
+            return new Promise((resolve, reject) => {
+                const reader = new FileReader();
+                reader.onload = () => resolve(reader.result.split(',')[1]);
+                reader.onerror = reject;
+                reader.readAsDataURL(file);
+            });
+        }
+
+        // ── Render Grid ─────────────────────────
+        function renderAdminGrid() {
+            const grid = document.getElementById('adminGrid');
+            const empty = document.getElementById('emptyAdmin');
+            
+            const filtered = currentFilter === 'all' 
+                ? galleryData 
+                : galleryData.filter(img => img.category === currentFilter);
+
+            if (filtered.length === 0) {
+                grid.innerHTML = '';
+                empty.style.display = 'block';
+                return;
+            }
+
+            empty.style.display = 'none';
+            grid.innerHTML = filtered.map((img, idx) => {
+                const globalIdx = galleryData.indexOf(img);
+                return `
+                <div class="admin-card" data-idx="${globalIdx}">
+                    <div class="admin-card-check ${selectedIds.has(globalIdx) ? 'checked' : ''}" 
+                         style="position:absolute;top:0.5rem;left:0.5rem;width:24px;height:24px;background:var(--surface);border:2px solid var(--border);border-radius:6px;cursor:pointer;display:flex;align-items:center;justify-content:center;z-index:10;transition:all 0.2s"
+                         onclick="toggleSelect(${globalIdx}, this)">
+                    </div>
+                    <img src="images/${img.category}/${img.filename}" class="admin-card-img" loading="lazy"
+                         onerror="this.style.display='none'">
+                    <div class="admin-card-info">
+                        <div class="category">${img.category}</div>
+                        ${img.source_url ? `<div class="source"><a href="${img.source_url}" target="_blank" style="color:var(--accent);text-decoration:none;font-size:0.75rem">${truncate(img.source_url, 30)}</a></div>` : ''}
+                        ${img.caption ? `<div style="margin-top:0.25rem">${escapeHtml(img.caption)}</div>` : ''}
+                    </div>
+                    <div class="admin-card-actions">
+                        <button class="btn btn-sm" style="background:var(--surface2);color:var(--text);border:1px solid var(--border)" onclick="openEdit(${globalIdx})">✏️ Edit</button>
+                        <button class="btn btn-danger btn-sm" onclick="deleteSingle(${globalIdx})">🗑 Hapus</button>
+                    </div>
+                </div>`;
+            }).join('');
+        }
+
+        // ── Selection ───────────────────────────
+        function toggleSelect(idx, el) {
+            el.classList.toggle('checked');
+            if (selectedIds.has(idx)) selectedIds.delete(idx);
+            else selectedIds.add(idx);
+            
+            const btn = document.getElementById('bulkDeleteBtn');
+            const count = document.getElementById('selectedCount');
+            btn.style.display = selectedIds.size > 0 ? 'inline-flex' : 'none';
+            count.textContent = selectedIds.size;
+        }
+
+        async function bulkDelete() {
+            if (!confirm(`Hapus ${selectedIds.size} foto yang dipilih?`)) return;
+            showStatus('Menghapus...', 'loading');
+            
+            for (const idx of [...selectedIds].sort((a, b) => b - a)) {
+                const img = galleryData[idx];
+                try {
+                    const file = await githubApi(`/contents/images/${img.category}/${img.filename}`);
+                    await githubApi(`/contents/images/${img.category}/${img.filename}`, 'DELETE', {
+                        message: `Delete ${img.category} image: ${img.filename}`,
+                        sha: file.sha,
+                        branch: 'main'
+                    });
+                } catch (e) { console.error(e); }
+                galleryData.splice(idx, 1);
+            }
+            
+            await saveGallery(`Delete ${selectedIds.size} images`);
+            selectedIds.clear();
+            document.getElementById('bulkDeleteBtn').style.display = 'none';
+            showStatus(`Berhasil hapus foto!`, 'success');
+            renderAdminGrid();
+        }
+
+        // ── Edit ────────────────────────────────
+        function openEdit(idx) {
+            const img = galleryData[idx];
+            document.getElementById('editIndex').value = idx;
+            document.getElementById('editCategory').value = img.category;
+            document.getElementById('editSource').value = img.source_url || '';
+            document.getElementById('editCaption').value = img.caption || '';
+            document.getElementById('editModal').classList.add('active');
+        }
+
+        async function saveEdit() {
+            const idx = parseInt(document.getElementById('editIndex').value);
+            const img = galleryData[idx];
+            const newCategory = document.getElementById('editCategory').value;
+            const newSource = document.getElementById('editSource').value.trim();
+            const newCaption = document.getElementById('editCaption').value.trim();
+
+            // If category changed, move the file
+            if (img.category !== newCategory) {
+                try {
+                    const file = await githubApi(`/contents/images/${img.category}/${img.filename}`);
+                    // Delete from old location
+                    await githubApi(`/contents/images/${img.category}/${img.filename}`, 'DELETE', {
+                        message: `Move image to ${newCategory}`,
+                        sha: file.sha,
+                        branch: 'main'
+                    });
+                    // Upload to new location
+                    await githubApi(`/contents/images/${newCategory}/${img.filename}`, 'PUT', {
+                        message: `Move image to ${newCategory}`,
+                        content: file.content,
+                        branch: 'main'
+                    });
+                } catch (e) { console.error(e); }
+            }
+
+            galleryData[idx] = { ...img, category: newCategory, source_url: newSource, caption: newCaption };
+            await saveGallery('Update image metadata');
+            closeModal();
+            showStatus('Berhasil update!', 'success');
+            renderAdminGrid();
+        }
+
+        function closeModal() { document.getElementById('editModal').classList.remove('active'); }
+
+        // ── Delete Single ───────────────────────
+        async function deleteSingle(idx) {
+            if (!confirm('Hapus foto ini?')) return;
+            showStatus('Menghapus...', 'loading');
+            
+            const img = galleryData[idx];
+            try {
+                const file = await githubApi(`/contents/images/${img.category}/${img.filename}`);
+                await githubApi(`/contents/images/${img.category}/${img.filename}`, 'DELETE', {
+                    message: `Delete ${img.category} image: ${img.filename}`,
+                    sha: file.sha,
+                    branch: 'main'
+                });
+            } catch (e) { console.error(e); }
+            
+            galleryData.splice(idx, 1);
+            await saveGallery('Delete image');
+            showStatus('Berhasil hapus!', 'success');
+            renderAdminGrid();
+        }
+
+        // ── Filter ──────────────────────────────
+        function filterGallery(cat) {
+            currentFilter = cat;
+            document.querySelectorAll('.filter-bar a').forEach(a => a.classList.remove('active'));
+            document.getElementById(`filter-${cat}`).classList.add('active');
+            renderAdminGrid();
+        }
+
+        // ── Helpers ─────────────────────────────
+        function showStatus(msg, type) {
+            const el = document.getElementById('statusMsg');
+            el.textContent = msg;
+            el.className = `status ${type}`;
+        }
+        function hideStatus() { document.getElementById('statusMsg').className = 'status'; }
+        function escapeHtml(t) { const d = document.createElement('div'); d.textContent = t; return d.innerHTML; }
+        function truncate(s, n) { return s.length > n ? s.substr(0, n) + '...' : s; }
+
+        // ── File Drop ───────────────────────────
+        const fileDrop = document.getElementById('fileDrop');
+        const fileInput = document.getElementById('fileInput');
+        fileDrop.addEventListener('click', () => fileInput.click());
+        fileDrop.addEventListener('dragover', e => { e.preventDefault(); fileDrop.classList.add('dragover'); });
+        fileDrop.addEventListener('dragleave', () => fileDrop.classList.remove('dragover'));
+        fileDrop.addEventListener('drop', e => { e.preventDefault(); fileDrop.classList.remove('dragover'); fileInput.files = e.dataTransfer.files; showPreview(); });
+        fileInput.addEventListener('change', showPreview);
+        function showPreview() {
+            const preview = document.getElementById('filePreview');
+            preview.innerHTML = '';
+            for (const file of fileInput.files) {
+                if (!file.type.startsWith('image/')) continue;
+                const reader = new FileReader();
+                reader.onload = e => {
+                    const div = document.createElement('div');
+                    div.className = 'file-preview-item';
+                    div.innerHTML = `<img src="${e.target.result}">`;
+                    preview.appendChild(div);
+                };
+                reader.readAsDataURL(file);
+            }
+        }
+
+        // ── Logout ──────────────────────────────
+        function logout() {
+            localStorage.removeItem(STORAGE_KEY);
+            config = {};
+            location.reload();
+        }
+
+        // ── Modal click outside ─────────────────
+        document.querySelectorAll('.modal-overlay').forEach(el => {
+            el.addEventListener('click', e => { if (e.target === el) el.classList.remove('active'); });
+        });
+
+        // ── Init ────────────────────────────────
+        init();
+    </script>
+</body>
+</html>

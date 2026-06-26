@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Koleksi Aya — Fanart & Cosplay</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <header class="header">
+        <div class="header-inner">
+            <a href="/" class="logo">
+                <span class="logo-icon">✧</span>
+                <span class="logo-text">Koleksi Aya</span>
+            </a>
+            <p class="subtitle">Fanart & Cosplay Collection</p>
+        </div>
+    </header>
+
+    <nav class="category-nav">
+        <button class="cat-tab active" data-cat="all">
+            <span class="cat-icon">◈</span> Semua
+            <span class="cat-count" id="count-all">0</span>
+        </button>
+        <button class="cat-tab" data-cat="cosplay">
+            <span class="cat-icon">♛</span> Cosplay
+        </button>
+        <button class="cat-tab" data-cat="fanart">
+            <span class="cat-icon">✎</span> Fanart
+        </button>
+    </nav>
+
+    <main class="gallery-container">
+        <div class="masonry" id="masonry"></div>
+        <div class="empty-state" id="emptyState" style="display:none">
+            <div class="empty-icon">✧</div>
+            <h3>Belum ada koleksi</h3>
+            <p>Foto akan muncul di sini setelah ditambahkan.</p>
+        </div>
+    </main>
+
+    <div class="lightbox" id="lightbox">
+        <button class="lightbox-close" onclick="closeLightbox()">&times;</button>
+        <div class="lightbox-content">
+            <img id="lightbox-img" src="" alt="">
+            <div class="lightbox-info">
+                <p id="lightbox-caption" class="lightbox-caption"></p>
+                <a id="lightbox-source" href="" target="_blank" rel="noopener" class="lightbox-source">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/>
+                        <polyline points="15 3 21 3 21 9"/>
+                        <line x1="10" y1="14" x2="21" y2="3"/>
+                    </svg>
+                    Lihat Sumber Asli
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <footer class="footer">
+        <p>Koleksi pribadi — Fanart & Cosplay</p>
+    </footer>
+
+    <script src="app.js"></script>
+</body>
+</html>
