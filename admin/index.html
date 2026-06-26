@@ -16,7 +16,6 @@
         * { margin: 0; padding: 0; box-sizing: border-box; }
         body { font-family: 'Plus Jakarta Sans', system-ui, sans-serif; background: var(--bg); color: var(--text); min-height: 100vh; }
 
-        /* Header */
         .admin-header {
             background: var(--surface); border-bottom: 1px solid var(--border);
             padding: 1rem 2rem; display: flex; align-items: center; justify-content: space-between;
@@ -28,31 +27,23 @@
             padding: 0.5rem 1rem; border: 1px solid var(--border); border-radius: 8px; transition: all 0.2s;
         }
         .admin-header a:hover { border-color: var(--accent); color: var(--accent); }
-
         .container { max-width: 1400px; margin: 0 auto; padding: 2rem; }
 
-        /* Setup Section */
-        .setup-section {
+        .setup-section, .upload-section {
             background: var(--surface); border: 1px solid var(--border);
             border-radius: var(--radius); padding: 2rem; margin-bottom: 2rem;
         }
-        .setup-section h2 { font-size: 1.1rem; margin-bottom: 1rem; color: var(--accent); }
-        .setup-section p { color: var(--text-muted); font-size: 0.9rem; margin-bottom: 1rem; line-height: 1.6; }
-        .setup-section ol { color: var(--text-muted); font-size: 0.9rem; margin-left: 1.5rem; margin-bottom: 1rem; }
+        .setup-section h2, .upload-section h2 { font-size: 1.1rem; margin-bottom: 1rem; color: var(--accent); }
+        .setup-section p, .setup-section ol, .setup-section li { color: var(--text-muted); font-size: 0.9rem; line-height: 1.6; }
+        .setup-section ol { margin-left: 1.5rem; margin-bottom: 1rem; }
         .setup-section li { margin-bottom: 0.5rem; }
         .setup-section code { background: var(--surface2); padding: 0.15rem 0.4rem; border-radius: 4px; font-size: 0.85rem; color: var(--accent); }
 
-        /* Upload Section */
-        .upload-section {
-            background: var(--surface); border: 1px solid var(--border);
-            border-radius: var(--radius); padding: 2rem; margin-bottom: 2rem;
-        }
-        .upload-section h2 { font-size: 1.1rem; margin-bottom: 1.5rem; color: var(--accent); }
         .upload-form { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
         .form-group { display: flex; flex-direction: column; gap: 0.4rem; }
         .form-group.full { grid-column: 1 / -1; }
         .form-group label { font-size: 0.8rem; font-weight: 600; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.05em; }
-        .form-group input, .form-group select, .form-group textarea {
+        .form-group input, .form-group select {
             background: var(--surface2); border: 1px solid var(--border); border-radius: 8px;
             padding: 0.75rem 1rem; color: var(--text); font-size: 0.9rem; font-family: inherit; transition: border-color 0.2s;
         }
@@ -82,13 +73,11 @@
         .btn-danger:hover { background: var(--danger); color: #000; }
         .btn-sm { padding: 0.4rem 0.8rem; font-size: 0.8rem; }
 
-        /* Status Messages */
         .status { padding: 0.75rem 1rem; border-radius: 8px; margin-bottom: 1rem; font-size: 0.9rem; display: none; }
         .status.success { display: block; background: rgba(74,222,128,0.1); color: var(--success); border: 1px solid rgba(74,222,128,0.2); }
         .status.error { display: block; background: rgba(248,113,113,0.1); color: var(--danger); border: 1px solid rgba(248,113,113,0.2); }
         .status.loading { display: block; background: rgba(192,132,252,0.1); color: var(--accent); border: 1px solid rgba(192,132,252,0.2); }
 
-        /* Filter */
         .filter-bar { display: flex; align-items: center; gap: 1rem; margin-bottom: 1.5rem; flex-wrap: wrap; }
         .filter-bar a {
             color: var(--text-muted); text-decoration: none; padding: 0.5rem 1rem;
@@ -98,7 +87,6 @@
         .filter-bar a.active { background: var(--accent); color: #000; border-color: var(--accent); }
         .filter-bar a:hover:not(.active) { border-color: var(--accent); }
 
-        /* Gallery Grid */
         .admin-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 1rem; }
         .admin-card {
             background: var(--surface); border: 1px solid var(--border);
@@ -108,16 +96,13 @@
         .admin-card-img { width: 100%; height: 200px; object-fit: cover; display: block; }
         .admin-card-info { padding: 0.75rem; font-size: 0.8rem; color: var(--text-muted); }
         .admin-card-info .category { color: var(--accent); font-weight: 600; text-transform: uppercase; font-size: 0.7rem; }
-        .admin-card-info .source { word-break: break-all; }
         .admin-card-actions { padding: 0 0.75rem 0.75rem; display: flex; gap: 0.5rem; }
         .admin-card-actions .btn { flex: 1; }
 
-        /* Progress */
-        .progress-bar { width: 100%; height: 4px; background: var(--border); border-radius: 2px; margin-top: 0.5rem; overflow: hidden; display: none; }
+        .progress-bar { width: 100%; height: 6px; background: var(--border); border-radius: 3px; margin-top: 0.5rem; overflow: hidden; display: none; }
         .progress-bar.active { display: block; }
-        .progress-fill { height: 100%; background: var(--accent); border-radius: 2px; transition: width 0.3s; width: 0%; }
+        .progress-fill { height: 100%; background: var(--accent); border-radius: 3px; transition: width 0.3s; width: 0%; }
 
-        /* Modal */
         .modal-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.8); z-index: 1000; align-items: center; justify-content: center; }
         .modal-overlay.active { display: flex; }
         .modal { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 2rem; width: 90%; max-width: 500px; }
@@ -136,12 +121,12 @@
     <header class="admin-header">
         <h1>✧ Admin Panel</h1>
         <div style="display:flex;gap:1rem;align-items:center;">
-            <a href="index.html">← Lihat Galeri</a>
+            <a href="../">← Lihat Galeri</a>
+            <a href="#" onclick="logout(); return false;">Logout</a>
         </div>
     </header>
 
     <div class="container">
-        <!-- Setup Section (shown when not configured) -->
         <div class="setup-section" id="setupSection">
             <h2>⚙️ Setup GitHub Connection</h2>
             <p>Untuk menggunakan admin panel ini, kamu perlu:</p>
@@ -149,9 +134,8 @@
                 <li>Buat <strong>GitHub Personal Access Token</strong> (PAT) dengan scope <code>repo</code>
                     <br>→ <a href="https://github.com/settings/tokens/new?scopes=repo&description=KoleksiAya-Admin" target="_blank" style="color:var(--accent)">Buat Token di sini</a></li>
                 <li>Masukkan token dan info repo di bawah</li>
-                <li>Token disimpan di localStorage browser kamu (tidak dikirim ke server lain)</li>
+                <li>Token disimpan di localStorage browser kamu</li>
             </ol>
-            
             <div style="margin-top:1.5rem">
                 <div class="form-group" style="margin-bottom:1rem">
                     <label>GitHub Token (PAT)</label>
@@ -165,17 +149,15 @@
             </div>
         </div>
 
-        <!-- Main Admin (shown when configured) -->
         <div id="mainAdmin" style="display:none">
             <div id="statusMsg" class="status"></div>
 
-            <!-- Upload Section -->
             <div class="upload-section">
                 <h2>📤 Upload Foto</h2>
                 <form id="uploadForm" onsubmit="handleUpload(event)">
                     <div class="upload-form">
                         <div class="form-group full">
-                            <label>Pilih Foto (bisa banyak sekaligus)</label>
+                            <label>Pilih Foto (bisa banyak sekaligus — 1 commit!)</label>
                             <div class="file-drop" id="fileDrop">
                                 <input type="file" id="fileInput" multiple accept="image/*">
                                 <div class="file-drop-label">
@@ -211,7 +193,6 @@
                 </form>
             </div>
 
-            <!-- Filter -->
             <div class="filter-bar">
                 <a onclick="filterGallery('all')" class="active" id="filter-all">Semua</a>
                 <a onclick="filterGallery('cosplay')" id="filter-cosplay">♛ Cosplay</a>
@@ -221,7 +202,6 @@
                 </button>
             </div>
 
-            <!-- Gallery -->
             <div class="admin-grid" id="adminGrid"></div>
             <div id="emptyAdmin" style="text-align:center;padding:4rem;color:var(--text-muted);display:none">
                 <div style="font-size:3rem;margin-bottom:1rem">✧</div>
@@ -266,12 +246,12 @@
         let selectedIds = new Set();
         let currentFilter = 'all';
 
-        // ── GitHub API ──────────────────────────
-        function getHeaders() {
+        // ── GitHub API Helpers ──────────────────
+        function getHeaders(contentType = 'application/json') {
             return {
                 'Authorization': `token ${config.token}`,
                 'Accept': 'application/vnd.github.v3+json',
-                'Content-Type': 'application/json'
+                'Content-Type': contentType
             };
         }
 
@@ -285,6 +265,53 @@
                 throw new Error(err.message || `GitHub API error: ${res.status}`);
             }
             return res.json();
+        }
+
+        // ── Batch Commit (single commit for multiple files) ──
+        async function batchCommit(filesToAdd, message) {
+            // Step 1: Get current ref
+            const ref = await githubApi('/git/refs/heads/main');
+            const latestCommitSha = ref.object.sha;
+
+            // Step 2: Get current commit to get base tree
+            const commit = await githubApi(`/git/commits/${latestCommitSha}`);
+            const baseTreeSha = commit.tree.sha;
+
+            // Step 3: Create blobs for each file
+            const treeItems = [];
+            for (const file of filesToAdd) {
+                const blob = await githubApi('/git/blobs', 'POST', {
+                    content: file.content,
+                    encoding: 'base64'
+                });
+                treeItems.push({
+                    path: file.path,
+                    mode: '100644',
+                    type: 'blob',
+                    sha: blob.sha
+                });
+            }
+
+            // Step 4: Create new tree
+            const newTree = await githubApi('/git/trees', 'POST', {
+                base_tree: baseTreeSha,
+                tree: treeItems
+            });
+
+            // Step 5: Create commit
+            const newCommit = await githubApi('/git/commits', 'POST', {
+                message: message,
+                tree: newTree.sha,
+                parents: [latestCommitSha]
+            });
+
+            // Step 6: Update ref
+            await githubApi('/git/refs/heads/main', 'PATCH', {
+                sha: newCommit.sha,
+                force: false
+            });
+
+            return newCommit.sha;
         }
 
         // ── Init ────────────────────────────────
@@ -305,6 +332,12 @@
             init();
         }
 
+        function logout() {
+            localStorage.removeItem(STORAGE_KEY);
+            config = {};
+            location.reload();
+        }
+
         // ── Load Gallery ────────────────────────
         async function loadGallery() {
             try {
@@ -315,38 +348,13 @@
                 hideStatus();
             } catch (e) {
                 console.error(e);
-                showStatus('Gagal memuat data: ' + e.message, 'error');
                 galleryData = [];
                 renderAdminGrid();
+                hideStatus();
             }
         }
 
-        // ── Save Gallery ────────────────────────
-        async function saveGallery(message) {
-            try {
-                let sha = null;
-                try {
-                    const file = await githubApi('/contents/data/gallery.json');
-                    sha = file.sha;
-                } catch (e) { /* file doesn't exist yet */ }
-
-                const body = {
-                    message: message || 'Update gallery',
-                    content: btoa(JSON.stringify(galleryData, null, 2)),
-                    branch: 'main'
-                };
-                if (sha) body.sha = sha;
-
-                await githubApi('/contents/data/gallery.json', 'PUT', body);
-                return true;
-            } catch (e) {
-                console.error(e);
-                showStatus('Gagal menyimpan: ' + e.message, 'error');
-                return false;
-            }
-        }
-
-        // ── Upload ──────────────────────────────
+        // ── Upload (Single Commit!) ─────────────
         async function handleUpload(e) {
             e.preventDefault();
             const files = document.getElementById('fileInput').files;
@@ -360,58 +368,70 @@
             const progressBar = document.getElementById('progressBar');
             const progressFill = document.getElementById('progressFill');
             btn.disabled = true;
-            btn.textContent = '⏳ Mengupload...';
+            btn.textContent = '⏳ Menyiapkan...';
             progressBar.classList.add('active');
 
-            let uploaded = 0;
-            for (const file of files) {
-                try {
+            try {
+                // Step 1: Convert all files to base64
+                const filesToAdd = [];
+                const newEntries = [];
+
+                for (let i = 0; i < files.length; i++) {
+                    const file = files[i];
+                    progressFill.style.width = `${((i + 1) / files.length) * 30}%`;
+                    btn.textContent = `⏳ Membaca file ${i + 1}/${files.length}...`;
+
                     const ext = file.name.split('.').pop().toLowerCase();
                     const filename = `${Date.now()}-${Math.random().toString(36).substr(2, 6)}.${ext}`;
                     const path = `images/${category}/${filename}`;
-
-                    // Convert to base64
                     const base64 = await fileToBase64(file);
 
-                    // Upload to GitHub
-                    await githubApi(`/contents/${path}`, 'PUT', {
-                        message: `Add ${category} image: ${filename}`,
-                        content: base64,
-                        branch: 'main'
-                    });
+                    filesToAdd.push({ path, content: base64 });
 
-                    // Add to gallery data
-                    galleryData.push({
+                    newEntries.push({
                         filename,
                         category,
                         source_url: sourceUrl,
                         caption,
                         added_at: new Date().toISOString()
                     });
-
-                    uploaded++;
-                    progressFill.style.width = `${(uploaded / files.length) * 100}%`;
-                } catch (err) {
-                    console.error(`Failed to upload ${file.name}:`, err);
                 }
+
+                // Step 2: Add updated gallery.json to batch
+                const updatedData = [...galleryData, ...newEntries];
+                const galleryJsonBase64 = btoa(unescape(encodeURIComponent(JSON.stringify(updatedData, null, 2))));
+                filesToAdd.push({
+                    path: 'data/gallery.json',
+                    content: galleryJsonBase64
+                });
+
+                // Step 3: Single commit with ALL files
+                progressFill.style.width = '60%';
+                btn.textContent = '⏳ Upload ke GitHub (1 commit)...';
+
+                await batchCommit(filesToAdd, `Add ${files.length} ${category} images`);
+
+                progressFill.style.width = '100%';
+                galleryData = updatedData;
+
+                // Reset form
+                document.getElementById('fileInput').value = '';
+                document.getElementById('filePreview').innerHTML = '';
+                document.getElementById('uploadSource').value = '';
+                document.getElementById('uploadCaption').value = '';
+
+                showStatus(`✅ Berhasil upload ${files.length} foto dalam 1 commit!`, 'success');
+                renderAdminGrid();
+
+            } catch (err) {
+                console.error(err);
+                showStatus('❌ Gagal upload: ' + err.message, 'error');
+            } finally {
+                btn.disabled = false;
+                btn.textContent = '🚀 Upload Sekarang';
+                progressBar.classList.remove('active');
+                progressFill.style.width = '0%';
             }
-
-            // Save gallery.json
-            await saveGallery(`Add ${uploaded} images`);
-
-            btn.disabled = false;
-            btn.textContent = '🚀 Upload Sekarang';
-            progressBar.classList.remove('active');
-            progressFill.style.width = '0%';
-
-            // Reset form
-            document.getElementById('fileInput').value = '';
-            document.getElementById('filePreview').innerHTML = '';
-            document.getElementById('uploadSource').value = '';
-            document.getElementById('uploadCaption').value = '';
-
-            showStatus(`Berhasil upload ${uploaded} foto!`, 'success');
-            renderAdminGrid();
         }
 
         function fileToBase64(file) {
@@ -427,9 +447,9 @@
         function renderAdminGrid() {
             const grid = document.getElementById('adminGrid');
             const empty = document.getElementById('emptyAdmin');
-            
-            const filtered = currentFilter === 'all' 
-                ? galleryData 
+
+            const filtered = currentFilter === 'all'
+                ? galleryData
                 : galleryData.filter(img => img.category === currentFilter);
 
             if (filtered.length === 0) {
@@ -443,11 +463,11 @@
                 const globalIdx = galleryData.indexOf(img);
                 return `
                 <div class="admin-card" data-idx="${globalIdx}">
-                    <div class="admin-card-check ${selectedIds.has(globalIdx) ? 'checked' : ''}" 
+                    <div class="admin-card-check ${selectedIds.has(globalIdx) ? 'checked' : ''}"
                          style="position:absolute;top:0.5rem;left:0.5rem;width:24px;height:24px;background:var(--surface);border:2px solid var(--border);border-radius:6px;cursor:pointer;display:flex;align-items:center;justify-content:center;z-index:10;transition:all 0.2s"
                          onclick="toggleSelect(${globalIdx}, this)">
                     </div>
-                    <img src="images/${img.category}/${img.filename}" class="admin-card-img" loading="lazy"
+                    <img src="../images/${img.category}/${img.filename}" class="admin-card-img" loading="lazy"
                          onerror="this.style.display='none'">
                     <div class="admin-card-info">
                         <div class="category">${img.category}</div>
@@ -467,38 +487,157 @@
             el.classList.toggle('checked');
             if (selectedIds.has(idx)) selectedIds.delete(idx);
             else selectedIds.add(idx);
-            
+
             const btn = document.getElementById('bulkDeleteBtn');
             const count = document.getElementById('selectedCount');
             btn.style.display = selectedIds.size > 0 ? 'inline-flex' : 'none';
             count.textContent = selectedIds.size;
         }
 
+        // ── Delete (Single Commit!) ─────────────
+        async function deleteSingle(idx) {
+            if (!confirm('Hapus foto ini?')) return;
+            showStatus('Menghapus...', 'loading');
+
+            try {
+                const img = galleryData[idx];
+
+                // Get current state
+                const ref = await githubApi('/git/refs/heads/main');
+                const commit = await githubApi(`/git/commits/${ref.object.sha}`);
+
+                // Get the file blob to know what to exclude
+                const tree = await githubApi(`/git/trees/${commit.tree.sha}?recursive=1`);
+
+                // Filter out the deleted image
+                const updatedData = galleryData.filter((_, i) => i !== idx);
+
+                // Create new gallery.json
+                const galleryJsonBase64 = btoa(unescape(encodeURIComponent(JSON.stringify(updatedData, null, 2))));
+
+                // Build tree items (exclude deleted file)
+                const deletedPath = `images/${img.category}/${img.filename}`;
+                const treeItems = tree.tree
+                    .filter(item => item.type === 'blob' && item.path !== deletedPath && item.path !== 'data/gallery.json')
+                    .map(item => ({
+                        path: item.path,
+                        mode: item.mode,
+                        type: item.type,
+                        sha: item.sha
+                    }));
+
+                // Add updated gallery.json
+                const blob = await githubApi('/git/blobs', 'POST', {
+                    content: galleryJsonBase64,
+                    encoding: 'base64'
+                });
+                treeItems.push({
+                    path: 'data/gallery.json',
+                    mode: '100644',
+                    type: 'blob',
+                    sha: blob.sha
+                });
+
+                // Create new tree and commit
+                const newTree = await githubApi('/git/trees', 'POST', {
+                    base_tree: commit.tree.sha,
+                    tree: treeItems
+                });
+
+                const newCommit = await githubApi('/git/commits', 'POST', {
+                    message: `Delete ${img.category} image: ${img.filename}`,
+                    tree: newTree.sha,
+                    parents: [ref.object.sha]
+                });
+
+                await githubApi('/git/refs/heads/main', 'PATCH', {
+                    sha: newCommit.sha,
+                    force: false
+                });
+
+                galleryData = updatedData;
+                showStatus('✅ Berhasil hapus!', 'success');
+                renderAdminGrid();
+
+            } catch (err) {
+                console.error(err);
+                showStatus('❌ Gagal hapus: ' + err.message, 'error');
+            }
+        }
+
+        // ── Bulk Delete (Single Commit!) ────────
         async function bulkDelete() {
             if (!confirm(`Hapus ${selectedIds.size} foto yang dipilih?`)) return;
             showStatus('Menghapus...', 'loading');
-            
-            for (const idx of [...selectedIds].sort((a, b) => b - a)) {
-                const img = galleryData[idx];
-                try {
-                    const file = await githubApi(`/contents/images/${img.category}/${img.filename}`);
-                    await githubApi(`/contents/images/${img.category}/${img.filename}`, 'DELETE', {
-                        message: `Delete ${img.category} image: ${img.filename}`,
-                        sha: file.sha,
-                        branch: 'main'
-                    });
-                } catch (e) { console.error(e); }
-                galleryData.splice(idx, 1);
+
+            try {
+                const ref = await githubApi('/git/refs/heads/main');
+                const commit = await githubApi(`/git/commits/${ref.object.sha}`);
+                const tree = await githubApi(`/git/trees/${commit.tree.sha}?recursive=1`);
+
+                // Get paths to delete
+                const deletePaths = new Set();
+                for (const idx of selectedIds) {
+                    const img = galleryData[idx];
+                    deletePaths.add(`images/${img.category}/${img.filename}`);
+                }
+
+                // Filter data
+                const updatedData = galleryData.filter((_, i) => !selectedIds.has(i));
+
+                // Build tree
+                const treeItems = tree.tree
+                    .filter(item => item.type === 'blob' && !deletePaths.has(item.path) && item.path !== 'data/gallery.json')
+                    .map(item => ({
+                        path: item.path,
+                        mode: item.mode,
+                        type: item.type,
+                        sha: item.sha
+                    }));
+
+                // Add updated gallery.json
+                const galleryJsonBase64 = btoa(unescape(encodeURIComponent(JSON.stringify(updatedData, null, 2))));
+                const blob = await githubApi('/git/blobs', 'POST', {
+                    content: galleryJsonBase64,
+                    encoding: 'base64'
+                });
+                treeItems.push({
+                    path: 'data/gallery.json',
+                    mode: '100644',
+                    type: 'blob',
+                    sha: blob.sha
+                });
+
+                // Commit
+                const newTree = await githubApi('/git/trees', 'POST', {
+                    base_tree: commit.tree.sha,
+                    tree: treeItems
+                });
+
+                const newCommit = await githubApi('/git/commits', 'POST', {
+                    message: `Delete ${selectedIds.size} images`,
+                    tree: newTree.sha,
+                    parents: [ref.object.sha]
+                });
+
+                await githubApi('/git/refs/heads/main', 'PATCH', {
+                    sha: newCommit.sha,
+                    force: false
+                });
+
+                galleryData = updatedData;
+                selectedIds.clear();
+                document.getElementById('bulkDeleteBtn').style.display = 'none';
+                showStatus(`✅ Berhasil hapus ${selectedIds.size} foto dalam 1 commit!`, 'success');
+                renderAdminGrid();
+
+            } catch (err) {
+                console.error(err);
+                showStatus('❌ Gagal hapus: ' + err.message, 'error');
             }
-            
-            await saveGallery(`Delete ${selectedIds.size} images`);
-            selectedIds.clear();
-            document.getElementById('bulkDeleteBtn').style.display = 'none';
-            showStatus(`Berhasil hapus foto!`, 'success');
-            renderAdminGrid();
         }
 
-        // ── Edit ────────────────────────────────
+        // ── Edit (Single Commit!) ───────────────
         function openEdit(idx) {
             const img = galleryData[idx];
             document.getElementById('editIndex').value = idx;
@@ -515,54 +654,67 @@
             const newSource = document.getElementById('editSource').value.trim();
             const newCaption = document.getElementById('editCaption').value.trim();
 
-            // If category changed, move the file
-            if (img.category !== newCategory) {
-                try {
-                    const file = await githubApi(`/contents/images/${img.category}/${img.filename}`);
-                    // Delete from old location
-                    await githubApi(`/contents/images/${img.category}/${img.filename}`, 'DELETE', {
-                        message: `Move image to ${newCategory}`,
-                        sha: file.sha,
-                        branch: 'main'
-                    });
-                    // Upload to new location
-                    await githubApi(`/contents/images/${newCategory}/${img.filename}`, 'PUT', {
-                        message: `Move image to ${newCategory}`,
-                        content: file.content,
-                        branch: 'main'
-                    });
-                } catch (e) { console.error(e); }
-            }
+            try {
+                showStatus('Menyimpan...', 'loading');
 
-            galleryData[idx] = { ...img, category: newCategory, source_url: newSource, caption: newCaption };
-            await saveGallery('Update image metadata');
-            closeModal();
-            showStatus('Berhasil update!', 'success');
-            renderAdminGrid();
+                // Update local data
+                galleryData[idx] = { ...img, category: newCategory, source_url: newSource, caption: newCaption };
+
+                // Get current state
+                const ref = await githubApi('/git/refs/heads/main');
+                const commit = await githubApi(`/git/commits/${ref.object.sha}`);
+
+                // Create updated gallery.json
+                const galleryJsonBase64 = btoa(unescape(encodeURIComponent(JSON.stringify(galleryData, null, 2))));
+                const blob = await githubApi('/git/blobs', 'POST', {
+                    content: galleryJsonBase64,
+                    encoding: 'base64'
+                });
+
+                // Create tree with just the updated gallery.json
+                const tree = await githubApi(`/git/trees/${commit.tree.sha}?recursive=1`);
+                const treeItems = tree.tree
+                    .filter(item => item.type === 'blob' && item.path !== 'data/gallery.json')
+                    .map(item => ({
+                        path: item.path,
+                        mode: item.mode,
+                        type: item.type,
+                        sha: item.sha
+                    }));
+                treeItems.push({
+                    path: 'data/gallery.json',
+                    mode: '100644',
+                    type: 'blob',
+                    sha: blob.sha
+                });
+
+                const newTree = await githubApi('/git/trees', 'POST', {
+                    base_tree: commit.tree.sha,
+                    tree: treeItems
+                });
+
+                const newCommit = await githubApi('/git/commits', 'POST', {
+                    message: `Update image metadata: ${img.filename}`,
+                    tree: newTree.sha,
+                    parents: [ref.object.sha]
+                });
+
+                await githubApi('/git/refs/heads/main', 'PATCH', {
+                    sha: newCommit.sha,
+                    force: false
+                });
+
+                closeModal();
+                showStatus('✅ Berhasil update!', 'success');
+                renderAdminGrid();
+
+            } catch (err) {
+                console.error(err);
+                showStatus('❌ Gagal update: ' + err.message, 'error');
+            }
         }
 
         function closeModal() { document.getElementById('editModal').classList.remove('active'); }
-
-        // ── Delete Single ───────────────────────
-        async function deleteSingle(idx) {
-            if (!confirm('Hapus foto ini?')) return;
-            showStatus('Menghapus...', 'loading');
-            
-            const img = galleryData[idx];
-            try {
-                const file = await githubApi(`/contents/images/${img.category}/${img.filename}`);
-                await githubApi(`/contents/images/${img.category}/${img.filename}`, 'DELETE', {
-                    message: `Delete ${img.category} image: ${img.filename}`,
-                    sha: file.sha,
-                    branch: 'main'
-                });
-            } catch (e) { console.error(e); }
-            
-            galleryData.splice(idx, 1);
-            await saveGallery('Delete image');
-            showStatus('Berhasil hapus!', 'success');
-            renderAdminGrid();
-        }
 
         // ── Filter ──────────────────────────────
         function filterGallery(cat) {
@@ -604,13 +756,6 @@
                 };
                 reader.readAsDataURL(file);
             }
-        }
-
-        // ── Logout ──────────────────────────────
-        function logout() {
-            localStorage.removeItem(STORAGE_KEY);
-            config = {};
-            location.reload();
         }
 
         // ── Modal click outside ─────────────────
