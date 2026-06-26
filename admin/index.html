@@ -506,16 +506,16 @@
                 const ref = await githubApi('/git/refs/heads/main');
                 const commit = await githubApi(`/git/commits/${ref.object.sha}`);
 
-                // Get the file blob to know what to exclude
+                // Get the full tree
                 const tree = await githubApi(`/git/trees/${commit.tree.sha}?recursive=1`);
 
-                // Filter out the deleted image
+                // Filter out the deleted image from gallery data
                 const updatedData = galleryData.filter((_, i) => i !== idx);
 
                 // Create new gallery.json
                 const galleryJsonBase64 = btoa(unescape(encodeURIComponent(JSON.stringify(updatedData, null, 2))));
 
-                // Build tree items (exclude deleted file)
+                // Build tree items - include all files EXCEPT the deleted one and gallery.json
                 const deletedPath = `images/${img.category}/${img.filename}`;
                 const treeItems = tree.tree
                     .filter(item => item.type === 'blob' && item.path !== deletedPath && item.path !== 'data/gallery.json')
@@ -538,9 +538,16 @@
                     sha: blob.sha
                 });
 
-                // Create new tree and commit
+                // IMPORTANT: Explicitly delete the image file by setting sha to null
+                treeItems.push({
+                    path: deletedPath,
+                    mode: '100644',
+                    type: 'blob',
+                    sha: null  // This tells GitHub to DELETE this file
+                });
+
+                // Create new tree (WITHOUT base_tree, so we control all files)
                 const newTree = await githubApi('/git/trees', 'POST', {
-                    base_tree: commit.tree.sha,
                     tree: treeItems
                 });
 
@@ -567,7 +574,8 @@
 
         // ── Bulk Delete (Single Commit!) ────────
         async function bulkDelete() {
-            if (!confirm(`Hapus ${selectedIds.size} foto yang dipilih?`)) return;
+            const count = selectedIds.size;
+            if (!confirm(`Hapus ${count} foto yang dipilih?`)) return;
             showStatus('Menghapus...', 'loading');
 
             try {
@@ -585,7 +593,7 @@
                 // Filter data
                 const updatedData = galleryData.filter((_, i) => !selectedIds.has(i));
 
-                // Build tree
+                // Build tree - include all files EXCEPT deleted ones and gallery.json
                 const treeItems = tree.tree
                     .filter(item => item.type === 'blob' && !deletePaths.has(item.path) && item.path !== 'data/gallery.json')
                     .map(item => ({
@@ -608,14 +616,23 @@
                     sha: blob.sha
                 });
 
-                // Commit
+                // IMPORTANT: Explicitly delete each image file by setting sha to null
+                for (const path of deletePaths) {
+                    treeItems.push({
+                        path: path,
+                        mode: '100644',
+                        type: 'blob',
+                        sha: null  // This tells GitHub to DELETE this file
+                    });
+                }
+
+                // Create new tree (WITHOUT base_tree)
                 const newTree = await githubApi('/git/trees', 'POST', {
-                    base_tree: commit.tree.sha,
                     tree: treeItems
                 });
 
                 const newCommit = await githubApi('/git/commits', 'POST', {
-                    message: `Delete ${selectedIds.size} images`,
+                    message: `Delete ${count} images`,
                     tree: newTree.sha,
                     parents: [ref.object.sha]
                 });
@@ -628,7 +645,7 @@
                 galleryData = updatedData;
                 selectedIds.clear();
                 document.getElementById('bulkDeleteBtn').style.display = 'none';
-                showStatus(`✅ Berhasil hapus ${selectedIds.size} foto dalam 1 commit!`, 'success');
+                showStatus(`✅ Berhasil hapus ${count} foto dalam 1 commit!`, 'success');
                 renderAdminGrid();
 
             } catch (err) {
